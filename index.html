@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Music player</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -298,8 +299,7 @@
     resizeCanvas();
  //sending msg
 
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
+    
   emailjs.init('vz6ZZkY4Rzi5uxTUm'); // Your Public Key
 
   document.getElementById('send-button').addEventListener('click', function () {
@@ -321,7 +321,6 @@
       console.error('EmailJS error:', error);
     });
   });
-</script>
 
   </script>
 </body>

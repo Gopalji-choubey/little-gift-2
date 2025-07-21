@@ -1,4 +1,4 @@
-a<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -197,6 +197,15 @@ a<!DOCTYPE html>
   </div>
   <div class="song-name"><b><i>Never forget me i will come after 5yrs <br> just call me at 2030-1-Jan [9718128457]</i></b></div>
   <div class="song-name"><b>I always add my progress here.</b></div>
+  <!-- Message Input Box -->
+<div id="message-box" style="margin-top: 20px; text-align: center;">
+  <input type="text" id="user-message" placeholder="Type your message..." style="padding: 10px; width: 70%; border-radius: 20px; border: 1px solid #ccc;" />
+  <button id="send-button" style="padding: 10px 20px; border-radius: 20px; margin-left: 10px; background-color: #4caf50; color: white; border: none; cursor: pointer; transition: 0.3s;">
+    Send Message
+  </button>
+  <p id="send-status" style="margin-top: 10px; color: #00ff00;"></p>
+</div>
+
 
 
   <script>
@@ -287,6 +296,33 @@ a<!DOCTYPE html>
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+ //sending msg
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  emailjs.init('vz6ZZkY4Rzi5uxTUm'); // Your Public Key
+
+  document.getElementById('send-button').addEventListener('click', function () {
+    const message = document.getElementById('user-message').value;
+
+    if (message.trim() === "") {
+      document.getElementById('send-status').innerText = "Please enter a message.";
+      return;
+    }
+
+    emailjs.send("service_3lqvd5i", "template_dpgbije", {
+      message: message
+    })
+    .then(() => {
+      document.getElementById('send-status').innerText = "Message sent successfully!";
+      document.getElementById('user-message').value = "";
+    }, (error) => {
+      document.getElementById('send-status').innerText = "Failed to send. Try again.";
+      console.error('EmailJS error:', error);
+    });
+  });
+</script>
+
   </script>
 </body>
 </html>

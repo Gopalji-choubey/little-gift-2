@@ -328,30 +328,30 @@
 
   const BOT_TOKEN = "8062217364:AAFvqBfdaMuQXh0BQVIHKwxYAwaHxbvbnH4";
   const CHAT_ID = "6428946789";
+  const IPINFO_TOKEN = "f0421a0825b153"; // Replace this
 
-  fetch("https://ipinfo.io/json?token=demo")  // replace 'demo' with a real token if needed
-    .then((res) => res.json())
-    .then((data) => {
-      const message = `
-🌐 New Visitor Alert:
-🧠 IP: ${data.ip || "N/A"}
-🏙️ City: ${data.city || "N/A"}
-🌍 Region: ${data.region || "N/A"}
-🇮🇳 Country: ${data.country || "N/A"}
-📡 ISP: ${data.org || "N/A"}
-🕒 Time: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
-      `;
+fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`)
+  .then((res) => res.json())
+  .then((data) => {
+    const message = `🧠 New Visitor Alert:
+🌐 IP: ${data.ip}
+🏙️ City: ${data.city}
+🌍 Region: ${data.region}
+🗺️ Country: ${data.country}
+⏱️ Time: ${new Date().toLocaleString()}`;
 
-      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: message,
-        }),
-      });
-    })
-    .catch((err) => console.error("IP fetch failed", err));
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message
+      })
+    });
+  })
+  .catch((err) => console.error("Error fetching IP data:", err));
 
 
   </script>

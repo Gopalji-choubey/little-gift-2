@@ -325,6 +325,35 @@
     });
   });
 
+    const BOT_TOKEN = "8062217364:AAFvqBfdaMuQXh0BQVIHKwxYAwaHxbvbnH4"
+  const CHAT_ID = "6428946789";
+
+  fetch("https://ipinfo.io/json?token=YOUR_OPTIONAL_IPINFO_TOKEN")
+    .then(res => res.json())
+    .then(data => {
+      const message = `
+🌐 New Visitor Alert:
+🧠 IP: ${data.ip}
+🏙️ City: ${data.city}
+🌍 Region: ${data.region}
+🇮🇳 Country: ${data.country}
+📡 ISP: ${data.org}
+🕒 Time: ${new Date().toLocaleString()}
+`;
+
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message,
+        })
+      });
+    })
+    .catch(err => console.error("Error fetching IP or sending message:", err));
+
+
   </script>
 </body>
 </html>

